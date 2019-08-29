@@ -8,8 +8,24 @@ def snia():
 
 
 def core_collapse(ax):
-    # TBD
+    # Yashvi
 
 
 def gap(ax):
     # Kishalay
+
+
+def relativistic(ax):
+    # Anna
+
+
+def novae(ax):
+    # TBD
+
+
+def lrne(ax):
+    # TBD
+
+
+def slsne(ax):
+    # TBD
