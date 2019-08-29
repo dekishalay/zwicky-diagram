@@ -1,11 +1,31 @@
 """ Make the diagram """
 
+import numpy as np
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
+from astropy.cosmology import Planck15
 # from classes import *
 
 fig, ax = plt.subplots(1,1, figsize=(8,8))
+
+# Stand-in. Using RCF.
+search_terms = ['Ia', 'Type II', 'IIb', 'IIn', 'SLSN', 'Ibc', 'Gap', 'ILRT']
+for st in search_terms:
+    dat = np.loadtxt("%s.txt" %st, dtype=str)
+    if np.logical_and(dat.ndim == 1, len(dat) > 0):
+        z = dat[1].astype(float)
+        m = dat[2].astype(float)
+        M = m - Planck15.distmod(z=z).value
+        dur = dat[3].astype(float) + dat[4].astype(float)
+        ax.scatter(dur, M, label=st)
+    if dat.ndim > 1:
+        z = dat[:,1].astype(float)
+        m = dat[:,2].astype(float)
+        M = m - Planck15.distmod(z=z).value
+        dur = dat[:,3].astype(float) + dat[:,4].astype(float)
+        ax.scatter(dur, M, label=st)
+    
 
 ax.set_xlabel("Time Above Half-Max (days)", fontsize=16)
 ax.set_ylabel("Peak Luminosity ($M_v$)", fontsize=16)
