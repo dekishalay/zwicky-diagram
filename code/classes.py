@@ -19,6 +19,10 @@ def relativistic(ax):
     # Anna
 
 
+def slsne(ax):
+    # Lin
+
+
 def novae(ax):
     # TBD
 
@@ -27,5 +31,3 @@ def lrne(ax):
     # TBD
 
 
-def slsne(ax):
-    # TBD
