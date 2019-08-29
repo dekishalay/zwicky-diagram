@@ -3,10 +3,11 @@
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
+from classes import *
 
 fig, ax = plt.subplots(1,1, figsize=(8,8))
 
-ax.set_xlabel("Duration (days)", fontsize=16)
+ax.set_xlabel("Time Above Half-Max (days)", fontsize=16)
 ax.set_ylabel("Peak Bolometric Magnitude", fontsize=16)
 ax.set_xlim(0.1,100)
 ax.set_xscale('log')
