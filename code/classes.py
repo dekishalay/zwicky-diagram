@@ -28,6 +28,6 @@ def novae(ax):
 
 
 def lrne(ax):
-    # TBD
+    # Nadia
 
 
