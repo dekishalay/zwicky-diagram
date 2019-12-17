@@ -7,12 +7,14 @@ import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 from astropy.cosmology import Planck15
-from classes import snia
+from classes import snia,relativistic
 
 fig, ax = plt.subplots(1,1, figsize=(8,6))
 
 snia(ax)
 ax.text(10, -20.3, "Type Ia SNe", fontsize=14)
+
+relativistic(ax)
 
 # Stand-in. Using RCF.
 search_terms = ['Ia', 'Type II', 'IIb', 'IIn', 'SLSN', 'Ibc', 'Gap', 'ILRT']
@@ -34,7 +36,7 @@ for st in search_terms:
 ax.set_xlabel("Time Above Half-Max (days)", fontsize=16)
 ax.set_xlim(0.1,100)
 ax.set_xscale('log')
-ax.set_ylim(-6, -24)
+ax.set_ylim(-5, -30)
 ax.set_ylabel("Peak Luminosity ($M_v$)", fontsize=16)
 
 # Axis showing luminosity in erg/s

@@ -5,6 +5,11 @@ import extinction
 import numpy as np
 import pandas as pd
 from astropy.table import Table
+from astropy.cosmology import Planck15
+from astropy.io import ascii
+import sys
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/fast_transient_search/code")
+from read_kann_lc import load_lc
 
 # Define cosmology
 from astropy.cosmology import FlatLambdaCDM
@@ -203,8 +208,23 @@ def gap(ax):
 
 
 def relativistic(ax):
-    # Anna
-    pass
+    """ 
+    Light curves of optical GRB afterglows provided by Anna Ho
+    ah@astro.caltech.edu
+    """
+    datadir = "/Users/annaho/Dropbox/Projects/Research/fast_transient_search/data/lc"
+    ptf11agg = ascii.read(datadir + "/lc_11agg.txt")
+    agg_mjd = ptf11agg['MJD']
+    agg_dt = agg_mjd-agg_mjd[0]
+    agg_mag = ptf11agg['mag']
+    agg_emag = ptf11agg['emag']
+    z = 1.5
+    peak = min(agg_mag)
+    thalf = np.interp(peak+0.75, agg_mag, agg_dt)/(1+z)
+    mag = peak-Planck15.distmod(z=z).value
+    ax.text(thalf, mag*0.1, "PTF11agg", fontsize=10,
+            horizontalalignment='center', verticalalignment='bottom')
+    ax.scatter(thalf, mag, marker='o', c='k')
 
 
 def slsne(ax):
