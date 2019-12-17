@@ -121,8 +121,9 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
                 time_duration = t_end - t_max
                 Tdeclines[i] = time_duration
         
-        tbnew = Table(data = [tb['name'].values,tb['z'].values, Mpeaks, Mpeaks_unc, Tdeclines],
-                      names = ['name', 'z', 'mag', 'mag_unc', 'timescale'])
+        tbnew = Table(data = [tb['name'].values,tb['z'].values, 
+            Mpeaks, Mpeaks_unc, Tdeclines],
+            names = ['name', 'z', 'mag', 'mag_unc', 'timescale'])
         tbnew.write(datafile, overwrite=True)
         
     data = pd.read_csv(datafile)
@@ -135,7 +136,8 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
     # ax = plt.subplot(111)
     
     # plot individual data points
-    ax.errorbar(x, y, y_err, fmt='.k')
+    #ax.errorbar(x, y, y_err, fmt='.k', ms=0.1) #, lw=0.1)
+    ax.scatter(x, y, marker='.', s=1, c='k', zorder=1)
     
     # plot the grey contour
     slope, e_slope, intercept = mylinear_fit(x, y, y_err, npar=2)
@@ -146,13 +148,53 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
     # fit = slope * x_fit+ intercept
     fit_up = slope_up * x_fit+ intercept
     fit_dw = slope_dw * x_fit+ intercept
-    ax.fill_between(x_fit, fit_up, fit_dw, color = 'grey', alpha=.25, label="5-sigma interval")
+    ax.fill_between(
+            x_fit, fit_up, fit_dw, facecolor = 'grey', 
+            label="5-sigma interval",
+            edgecolor='k', lw=1.0, zorder=0)
            
+
+def fix_df(df):
+    """ Helper function provided by Yashvi Sharma """
+    newcol = []
+    for i in range(len(df)):
+        lcstr = df.loc[i]['lc']
+        data = []
+        lcstr = lcstr.split('\n')
+        for line in lcstr[1:]:
+            data.append(line.split())
+        lcdf = pd.DataFrame(columns=['index','filter','jd','mag','magerr'],data=data)
+        newcol.append(lcdf)
+    df2 = df.drop(columns='lc')
+    df2['lc'] = newcol
+    return df2
 
 
 def core_collapse(ax):
-    # Yashvi
-    pass
+    """ Light curves of 230 CC SNe from RCF provided by Yashvi Sharma """
+    # Just start with the first object
+    df = pd.read_csv("../data/cc_sne.csv")
+    dat = fix_df(df)
+
+    # Just try one object for now
+    ii = 0
+    lc = df.loc[ii]['lc']
+    z = df.loc[ii]['redshift']
+    # if it's in the local universe...
+    if z != 'None':
+        if float(z) < 0.05:
+            jd = lc['jd'].values
+            band = lc['filter'].values
+            mag = lc['mag'].values
+
+            # Filter out nones 
+            jd = jd[jd != np.array(None)]
+            band = band[band != np.array(None)]
+            mag = mag[mag != np.array(None)]
+
+            # g-band: calculate max time and max mag
+            gband = band == 'g'
+            plot(jd[gband].astype(float), mag[gband].astype(float))
 
 
 def gap(ax):
