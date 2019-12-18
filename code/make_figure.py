@@ -18,11 +18,6 @@ snia(ax)
 ax.text(6, -20.5, "Thermonuclear\nSupernovae", 
         fontsize=14)#, bbox=dict(facecolor='white', edgecolor='grey'))
 
-relativistic(ax)
-ax.text(
-        0.1, -29, "Relativistic Explosions", 
-        fontsize=14)#, bbox=dict(facecolor='white', edgecolor='grey'))
-
 core_collapse(ax)
 ax.text(
         20, -14.2, "Core-collapse\nSupernovae",
