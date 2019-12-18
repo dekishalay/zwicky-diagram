@@ -19,6 +19,7 @@ cosmo = FlatLambdaCDM(H0=69.6, Om0=0.286)
 # Import plot functions
 from matplotlib.patches import Rectangle
 
+namesize = 10
 
 def snia(ax, band = 'p48g', timescale='efoldDecline',
          remove_nearby = True):
@@ -138,12 +139,9 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
     y = data['mag'].values
     y_err = data['mag_unc'].values
     
-    # plt.figure(figsize=(12, 8))
-    # ax = plt.subplot(111)
-    
     # plot individual data points
     #ax.errorbar(x, y, y_err, fmt='.k', ms=0.1) #, lw=0.1)
-    ax.scatter(x, y, marker='.', s=1, c='k', zorder=3)
+    ax.scatter(x, y, marker='.', s=1, c='k', zorder=3, label="1611 Ia SNe")
     
     # plot the grey contour
     slope, e_slope, intercept = mylinear_fit(x, y, y_err, npar=2)
@@ -154,10 +152,10 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
     # fit = slope * x_fit+ intercept
     fit_up = slope_up * x_fit+ intercept
     fit_dw = slope_dw * x_fit+ intercept
-    ax.fill_between(
-            x_fit, fit_up, fit_dw, facecolor = 'lightgrey', 
-            label="5-sigma interval",
-            edgecolor='k', lw=1.0, zorder=2)
+    #ax.fill_between(
+    #        x_fit, fit_up, fit_dw, facecolor = 'lightgrey', 
+    #        label="5-sigma interval",
+    #        edgecolor='grey', lw=1.0, zorder=2)
            
 
 def fix_df(df):
@@ -194,6 +192,7 @@ def core_collapse(ax):
     lcs = lcs[keep][choose]
 
     # Plot one of them
+    leg = True
     for ii in np.arange(sum(choose)):
         lc = lcs[ii]
         filt = lc['filter']
@@ -206,49 +205,116 @@ def core_collapse(ax):
             peakmag = np.min(mag)
             thalf = np.interp(peakmag+0.75, y, x)
             absmag = peakmag-Planck15.distmod(z=z[ii]).value
-            ax.scatter(thalf, absmag, c='lightgrey', marker='s', zorder=0)
+            if leg:
+                ax.scatter(
+                        thalf, absmag, c='lightgrey', marker='s', zorder=0, 
+                        label="630 CC SNe")
+                leg = False
+            else:
+                ax.scatter(
+                        thalf, absmag, c='lightgrey', marker='s', zorder=0, 
+                        label="_nolegend_")
+            leg = False
 
 
 def fbots(ax):
+    fbotcol = '#1b9e77'
     # Koala
     x, y = 6/1.2714, -21.2
-    ax.scatter(x, y, marker='D', c='k')
-    ax.text(x, y*1.01, "ZTF18abvkwla", fontsize=11, 
-            horizontalalignment='center', verticalalignment='bottom')
+    ax.scatter(x, y, marker='D', c=fbotcol, label="_nolegend_")
+    #ax.text(x, y*1.01, "ZTF18abvkwla", fontsize=namesize, color='#1b9e77',
+    #        horizontalalignment='center', verticalalignment='bottom')
 
     # AT2018cow
     x, y = 6, -20.5
-    ax.scatter(x, y, marker='D', c='k')
-    ax.text(x, y*1.01, "AT2018cow", fontsize=11, horizontalalignment='left',
-            verticalalignment='bottom')
+    ax.scatter(x, y, marker='D', color=fbotcol, label="38 FBOTs")
+    ax.text(x, y*1.01, "AT2018cow", fontsize=namesize, 
+            horizontalalignment='left', verticalalignment='bottom', 
+            color='#1b9e77', label="38 FBOTs")
 
     # ZTF18abukavn
     x, y = 10, -19.6
-    ax.scatter(x, y, marker='D', c='k')
-    ax.text(x, y/1.01, "ZTF18abukavn", fontsize=11, 
-            horizontalalignment='right', verticalalignment='top')
+    ax.scatter(x, y, marker='D', c=fbotcol, label="_nolegend_")
+    #ax.text(x, y/1.01, "ZTF18abukavn", fontsize=11, 
+    #        horizontalalignment='right', verticalalignment='top')
+
+    # ZTF18acrheel
+    x, y = 10, -19.6
+    ax.scatter(x/1.059, y, marker='D', c='#1b9e77', label="_nolegend_")
+    #ax.text(x, y/1.01, "ZTF18acrheel", fontsize=11, 
+    #        horizontalalignment='right', verticalalignment='top')
+
+    # ZTF18abqbuaj
+    x, y = 10, -18.9
+    ax.scatter(x/1.054, y, marker='D', c='#1b9e77', label="_nolegend_")
+    #ax.text(x, y/1.01, "ZTF18abqbuaj", fontsize=11, 
+    #        horizontalalignment='right', verticalalignment='top')
+
+    # ZTF19aakssbm
+    x, y = 8, -18.6
+    ax.scatter(x/1.036, y, marker='D', c='#1b9e77', label="_nolegend_")
+    #ax.text(x, y/1.01, "ZTF18abqbuaj", fontsize=11, 
+    #        horizontalalignment='right', verticalalignment='top')
 
     # PS1-10bjp
     x, y = (1+7.7)/1.113, -18.2
-    ax.scatter(x, y, marker='D', c='lightgrey')
+    ax.scatter(x, y, marker='D', c='lightgrey', label="_nolegend_")
 
     # PS1-11qr
     x, y = (3+8.7)/1.324, -19.3
-    ax.scatter(x, y, marker='D', c='lightgrey')
+    ax.scatter(x, y, marker='D', c='lightgrey', label="_nolegend_")
 
     # PS1-11qr
     x, y = (2+5)/1.405, -19.1
-    ax.scatter(x, y, marker='D', c='lightgrey')
+    ax.scatter(x, y, marker='D', c='lightgrey', label="_nolegend_")
 
     # PS1-12brf
     x, y = (9)/1.275, -18.3
-    ax.scatter(x, y, marker='D', c='lightgrey')
+    ax.scatter(x, y, marker='D', c='lightgrey', label="_nolegend_")
+
+
+def kilonova(ax):
+    ax.scatter(0.828, -18, marker='*', s=100, color='k')
 
 
 def gap(ax):
-    """ Data points from prev version of diagram """
-    dat = np.loadtxt("../data/gap.txt", delimiter=',')
-    ax.scatter(dat[:,0], dat[:,1], marker='X', c='k')
+    """ Data points from Dan Perley """
+    dat = Table.read(
+        "../data/from_dan_perley.txt", delimiter='|',
+        format='ascii.fast_no_header')
+    cl = np.array([val.split(" ")[0] for val in dat['col7']])
+    z = np.array([val[13:20] for val in dat['col7']])
+    maxcol = dat['col3']
+    filt = np.array([val.split(" ")[1] for val in maxcol])
+    maxmag = np.array([val.split(" ")[2] for val in maxcol]).astype(float)
+    timecol = dat['col6']
+    rise = np.array([val[0:6] for val in timecol])
+    fade = np.array([val[6:] for val in timecol])
+
+    useind = np.where(['Gap' in val for val in cl])[0]
+    leg = 'Ca-rich Gap'
+    for ii in useind:
+        bad = np.logical_or('+' in rise[ii], '+' in fade[ii])
+        if bad==False: 
+            timescale = float(rise[ii]) + float(fade[ii])
+            ax.scatter(
+                timescale, maxmag[ii]-Planck15.distmod(float(z[ii])).value,
+                marker='^', c='k', label=leg)
+            leg = '_nolegend_'
+
+
+def tde(ax):
+    dat = np.loadtxt("../data/tde.txt", dtype=str)
+    survey = dat[:,1]
+    choose = survey == 'ZTF'
+    ax.scatter(
+            10**(dat[:,3][choose].astype(float)), 
+            dat[:,2][choose].astype(float), 
+            c='lightgrey', marker='o')
+    ax.scatter(
+            10**(dat[:,3][~choose].astype(float)), 
+            dat[:,2][~choose].astype(float), 
+            c='k', marker='o', label='17 TDEs')
 
 
 def relativistic(ax):
@@ -320,24 +386,73 @@ def relativistic(ax):
 
 def slsne(ax):
     """ Data points from Dan Perley """
-    dat = np.loadtxt("../data/slsne/values.txt", delimiter=',')
-    ax.scatter(dat[:,0], dat[:,1], marker='v', c='purple')
+    dat = Table.read(
+        "../data/from_dan_perley.txt", delimiter='|',
+        format='ascii.fast_no_header')
+    cl = np.array([val.split(" ")[0] for val in dat['col7']])
+    z = np.array([val[13:20] for val in dat['col7']])
+    maxcol = dat['col3']
+    filt = np.array([val.split(" ")[1] for val in maxcol])
+    maxmag = np.array([val.split(" ")[2] for val in maxcol]).astype(float)
+    timecol = dat['col6']
+    rise = np.array([val[0:6] for val in timecol])
+    fade = np.array([val[6:] for val in timecol])
+
+    slind = np.where(['SLSN' in val for val in cl])[0]
+    leg = True
+    for ii in slind:
+        bad = np.logical_or('+' in rise[ii], '+' in fade[ii])
+        if bad==False: 
+            timescale = float(rise[ii]) + float(fade[ii])
+            if leg:
+                ax.scatter(
+                    timescale, maxmag[ii]-Planck15.distmod(float(z[ii])).value,
+                    marker='v', color='#7570b3', label="43 SLSNe")
+                leg = False
+            else:
+                ax.scatter(
+                    timescale, maxmag[ii]-Planck15.distmod(float(z[ii])).value,
+                    marker='v', color='#7570b3', label="_nolegend_")
 
 
 def novae(ax):
-    # TBD
-    pass
+    """ Data points from Dan Perley """
+    dat = Table.read(
+        "../data/from_dan_perley.txt", delimiter='|',
+        format='ascii.fast_no_header')
+    cl = np.array([val.split(" ")[0] for val in dat['col7']])
+    maxcol = dat['col3']
+    filt = np.array([val.split(" ")[1] for val in maxcol])
+    maxmag = np.array([val.split(" ")[2] for val in maxcol]).astype(float)
+    timecol = dat['col6']
+    rise = np.array([val[0:6] for val in timecol])
+    fade = np.array([val[6:] for val in timecol])
+
+    useind = np.where(
+            [np.logical_or('nova' in val,'Nova' in val) for val in cl])[0]
+    leg = '6 Novae'
+    for ii in useind:
+        bad = np.logical_or('+' in rise[ii], '+' in fade[ii])
+        if bad==False: 
+            timescale = float(rise[ii]) + float(fade[ii])
+            lum = maxmag[ii]-Planck15.distmod(z=0.000177).value
+            ax.scatter(
+                timescale, lum, marker='*', c='k', label=leg)
+            leg = '_nolegend_'
 
 
 def ilrt(ax):
     """ Data points from prev version of diagram """
     dat = np.loadtxt("../data/ilrt.txt", delimiter=',')
-    ax.scatter(dat[:,0], dat[:,1], marker='v', c='red')
+    ax.scatter(dat[:,0], dat[:,1], marker='+', c='grey', label="_nolegend")
+    ax.scatter(45, -12, marker='+', c='#d95f02', label="ILRT/LRN")
+    ax.text(45*1.05, -12, 'M51 OT2019-1', fontsize=10, color='#d95f02',
+            verticalalignment='center', horizontalalignment='left')
 
 
 def lrne(ax):
     """ Data points from prev version of diagram """
     dat = np.loadtxt("../data/lrn.txt", delimiter=',')
-    ax.scatter(dat[:,0], dat[:,1], marker='v', c='red')
+    ax.scatter(dat[:,0], dat[:,1], marker='+', c='grey', label="_nolegend_")
 
 

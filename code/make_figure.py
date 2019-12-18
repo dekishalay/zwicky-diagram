@@ -7,51 +7,63 @@ import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 from astropy.cosmology import Planck15
-from classes import snia,relativistic,core_collapse,slsne,fbots,ilrt,lrne,gap
+from astropy.table import Table
+from classes import *
 import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/Koala/code")
 from m_trise import *
 
 fig, ax = plt.subplots(1,1, figsize=(8,6))
 
+catsize = 12
+srcsize = 10
+
+ax.text(1.1, -23, "ZTF Phase I", fontsize=20)
+
 snia(ax)
-ax.text(16, -20.6, "1000 Ia SNe", 
-        fontsize=14, horizontalalignment='center', rotation=20)
+#ax.text(16, -20.6, "1611 Ia SNe", 
+#        fontsize=catsize, horizontalalignment='center', rotation=20)
 #, bbox=dict(facecolor='white', edgecolor='grey'))
 
+kilonova(ax)
+novae(ax)
+
+tde(ax)
+#ax.text(
+#        100, -22.5, "17 TDEs",
+#        fontsize=catsize, color='black')
+
 core_collapse(ax)
-ax.text(
-        20, -17.5, "200 CC SNe",
-        fontsize=14, color='black')#,
+#ax.text(
+#        20, -17.5, "630 CC SNe",
+#        fontsize=catsize, color='black')#,
         #bbox=dict(edgecolor='orange', facecolor='white'))
 
 slsne(ax)
-ax.text(20,-22, 'Superluminous\nSupernovae', 
-        fontsize=14, color='purple')#, bbox=dict(facecolor='white',
-            #edgecolor='purple'))
+#ax.text(50,-22, '43 SLSNe', fontsize=catsize, color='#7570b3',
+#        horizontalalignment='right')#, bbox=dict(facecolor='white',
+#            #edgecolor='purple'))
 
 fbots(ax)
-ax.text(2,-20,"FBOTs",fontsize=14,color='k')
+#ax.text(2,-20,"38 FBOTs",fontsize=catsize,color='#1b9e77')
 
 ilrt(ax)
-ax.text(31, -11, "Intermediate\nLuminosity\nRed Transients",
-        horizontalalignment='right', fontsize=14,color='red')
+#ax.text(31, -11, "Intermediate\nLuminosity\nRed Transients",
+#        horizontalalignment='right', fontsize=catsize,color='red')
 
 lrne(ax)
-ax.text(52, -8, "Luminous\nRed Novae",
-        horizontalalignment='right', fontsize=14,color='red')
+#ax.text(52, -8, "Luminous\nRed Novae",
+#        horizontalalignment='right', fontsize=catsize,color='red')
 
 gap(ax)
-ax.text(8, -15, "Ca-rich Gap",
-        horizontalalignment='right', fontsize=14,color='black')
-ax.text(4, -17, ".Ia Explosions",
-        horizontalalignment='right', fontsize=14,color='black')
+#ax.text(8, -15, "Ca-rich Gap",
+#        horizontalalignment='center', fontsize=catsize,color='black')
+#ax.text(4, -17, ".Ia Explosions",
+#        horizontalalignment='right', fontsize=catsize,color='black')
 
 ax.text(15, -7, "Classical Novae",
-        horizontalalignment='left', fontsize=14,color='black')
+        horizontalalignment='left', fontsize=catsize,color='black')
 
-# Stand-in. Using RCF.
-# search_terms = ['Ia', 'Type II', 'IIb', 'IIn', 'SLSN', 'Ibc', 'Gap', 'ILRT']
 # for st in search_terms:
 #     dat = np.loadtxt("%s.txt" %st, dtype=str)
 #     if np.logical_and(dat.ndim == 1, len(dat) > 0):
@@ -68,7 +80,7 @@ ax.text(15, -7, "Classical Novae",
 #         ax.scatter(dur, M, label=st)
     
 ax.set_xlabel("Time Above Half-Max (rest-frame days)", fontsize=16)
-ax.set_xlim(1,200)
+ax.set_xlim(1,300)
 ax.set_xscale('log')
 ax.set_ylim(-4.7, -24)
 ax.set_ylabel("Peak Luminosity ($M_v$)", fontsize=16)
@@ -105,6 +117,7 @@ ax.tick_params(axis='both', labelsize=14)
 # gep(axins)
 
 # Display
+ax.legend(loc='lower left', fontsize=catsize)
 plt.tight_layout()
-plt.show()
-#plt.savefig("tau_mv.png", dpi=500)
+#plt.show()
+plt.savefig("tau_mv.png", dpi=500)
