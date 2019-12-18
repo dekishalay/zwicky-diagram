@@ -414,6 +414,23 @@ def slsne(ax):
                     timescale, maxmag[ii]-Planck15.distmod(float(z[ii])).value,
                     marker='v', color='#7570b3', label="_nolegend_")
 
+    # Background
+    x = [32+61,  29+45,  21+54,  29+25,  33+25,  13+27,  15+24,  29+49,  28+36,  21+19]
+    y = [-21.78, -22.09, -22.03, -20.31, -21.94, -21.39, -20.88, -21.61, -19.90, -22.42]
+    ax.scatter(x, y, marker='v', color='lightgrey', label="_nolegend_", zorder=0)
+    
+
+def longsne(ax):
+    # iPTF14hls
+    ax.scatter(300, -18.7, marker='s', c='k')
+    ax.text(290, -18.5, "iPTF14hls", fontsize=10,
+            horizontalalignment='center', verticalalignment='top')
+
+    # ZTF object
+    ax.scatter(25, -16, marker='s', c='k')
+    ax.text(25, -15.8, "ZTF18acgvgiq", fontsize=10,
+            horizontalalignment='center', verticalalignment='top')
+
 
 def novae(ax):
     """ Data points from Dan Perley """

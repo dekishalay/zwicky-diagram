@@ -27,6 +27,7 @@ snia(ax)
 
 kilonova(ax)
 novae(ax)
+longsne(ax)
 
 tde(ax)
 #ax.text(
@@ -80,7 +81,7 @@ ax.text(15, -7, "Classical Novae",
 #         ax.scatter(dur, M, label=st)
     
 ax.set_xlabel("Time Above Half-Max (rest-frame days)", fontsize=16)
-ax.set_xlim(1,300)
+ax.set_xlim(1,400)
 ax.set_xscale('log')
 ax.set_ylim(-4.7, -24)
 ax.set_ylabel("Peak Luminosity ($M_v$)", fontsize=16)
