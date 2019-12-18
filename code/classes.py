@@ -10,6 +10,7 @@ from astropy.io import ascii
 import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/fast_transient_search/code")
 from read_kann_lc import load_lc
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/Koala/code")
 
 # Define cosmology
 from astropy.cosmology import FlatLambdaCDM
@@ -177,34 +178,65 @@ def fix_df(df):
 
 def core_collapse(ax):
     """ Light curves of 230 CC SNe from RCF provided by Yashvi Sharma """
-    # Just start with the first object
-    df = pd.read_csv("../data/cc_sne.csv")
-    dat = fix_df(df)
+    # Load the table of events
+    df = pd.read_csv("../data/ccsne/ccsne_final.csv")
+    keep = df['redshift'] != 'None'
 
-    # Just try one object for now
-    ii = 0
-    lc = df.loc[ii]['lc']
-    z = df.loc[ii]['redshift']
-    # if it's in the local universe...
-    if z != 'None':
-        if float(z) < 0.05:
-            jd = lc['jd'].values
-            band = lc['filter'].values
-            mag = lc['mag'].values
+    nearby = df['redshift'][keep].astype(float)<0.05
+    sampled = df['numpoints_lc'][keep]>50
+    choose = np.logical_and(nearby, sampled)
+    z = df['redshift'][keep].values[choose].astype(float)
 
-            # Filter out nones 
-            jd = jd[jd != np.array(None)]
-            band = band[band != np.array(None)]
-            mag = mag[mag != np.array(None)]
+    # Load the array of light curves
+    lcs = np.load(
+            "../data/ccsne/ccsne_lcs.npy", 
+            allow_pickle=True, encoding='latin1')
+    lcs = lcs[keep][choose]
 
-            # g-band: calculate max time and max mag
-            gband = band == 'g'
-            plot(jd[gband].astype(float), mag[gband].astype(float))
+    # Plot one of them
+    for ii in np.arange(sum(choose)):
+        lc = lcs[ii]
+        filt = lc['filter']
+        jd = lc['jd']
+        mag = lc['mag']
+        gband = filt == 'g'
+        if sum(gband) > 30:
+            x = jd[gband]-jd[gband].values[0]
+            y = mag[gband]
+            peakmag = np.min(mag)
+            thalf = np.interp(peakmag+0.75, y, x)
+            absmag = peakmag-Planck15.distmod(z=z[ii]).value
+            ax.scatter(thalf, absmag, c='orange', marker='s', zorder=0)
+
+
+def fbots(ax):
+    """ Will include an inset showing fast-rising transients """
+    # Koala
+    x, y = 6/1.2714, -21.2
+    ax.scatter(x, y, marker='D', c='k')
+    #ax.text(x, y, "ZTF18abvkwla", fontsize=10, horizontalalignment='right')
+
+    # PS1-10bjp
+    x, y = (1+7.7)/1.113, -18.2
+    ax.scatter(x, y, marker='D', c='k')
+
+    # PS1-11qr
+    x, y = (3+8.7)/1.324, -19.3
+    ax.scatter(x, y, marker='D', c='k')
+
+    # PS1-11qr
+    x, y = (2+5)/1.405, -19.1
+    ax.scatter(x, y, marker='D', c='k')
+
+    # PS1-12brf
+    x, y = (9)/1.275, -18.3
+    ax.scatter(x, y, marker='D', c='k')
 
 
 def gap(ax):
-    # Kishalay
-    pass
+    """ Data points from prev version of diagram """
+    dat = np.loadtxt("../data/gap.txt", delimiter=',')
+    ax.scatter(dat[:,0], dat[:,1], marker='X', c='k')
 
 
 def relativistic(ax):
@@ -212,6 +244,7 @@ def relativistic(ax):
     Light curves of optical GRB afterglows provided by Anna Ho
     ah@astro.caltech.edu
     """
+
     datadir = "/Users/annaho/Dropbox/Projects/Research/fast_transient_search/data/lc"
     ptf11agg = ascii.read(datadir + "/lc_11agg.txt")
     agg_mjd = ptf11agg['MJD']
@@ -222,14 +255,61 @@ def relativistic(ax):
     peak = min(agg_mag)
     thalf = np.interp(peak+0.75, agg_mag, agg_dt)/(1+z)
     mag = peak-Planck15.distmod(z=z).value
-    ax.text(thalf, mag*0.1, "PTF11agg", fontsize=10,
-            horizontalalignment='center', verticalalignment='bottom')
-    ax.scatter(thalf, mag, marker='o', c='k')
+    ax.text(thalf, mag*1.01, "PTF11agg", fontsize=10,
+            horizontalalignment='left', verticalalignment='bottom')
+    ax.scatter(thalf, mag, marker='o', c='k', zorder=1)
+
+    # Temporary values from the previous version of the plot
+    x,y = 0.010179047221370183, -28.38709677419355
+    ax.scatter(x, y, marker='o', c='k', zorder=1)
+    ax.text(x, y*1.01, "iPTF14cva")
+
+    x,y = 0.011941841178367309, -27.81783681214422
+    ax.scatter(x, y, marker='o', c='k', zorder=1)
+    ax.text(x, y*1.01, "iPTF14cyb")
+
+    x,y = 0.0420995502849078, -27.390891840607214
+    ax.scatter(x, y, marker='o', c='k', zorder=1)
+    ax.text(
+            x, y, "iPTF14yb", 
+            verticalalignment='top', horizontalalignment='right')
+
+    #x,y = 0.06003714594928769, -27.01138519924099
+    #ax.scatter(x, y, marker='o', c='k')
+    #ax.text(x, y*1.01, "iPTF13ekl")
+
+    x,y = 0.14841699095798874, -26.631878557874767
+    ax.scatter(x, y, marker='o', c='k', zorder=1)
+    ax.text(x, y/1.01, "ATLAS17aeu",
+            verticalalignment='top', horizontalalignment='center')
+
+    x,y = 0.28618535042609117, -26.29981024667932
+    ax.scatter(x, y, marker='o', c='k', zorder=1)
+    ax.text(x, y*1.01, "iPTF14aue")
+
+    x,y = 0.47880000093436637, -25.872865275142317
+    ax.scatter(x, y, marker='o', c='k', zorder=1)
+    ax.text(x, y, "iPTF13dsw", verticalalignment='top',
+            horizontalalignment='left')
+
+    # Add Kann sample if I can
+    lc = load_lc()
+    for key,value in lc.items():
+        try:
+            z = float(value['z'])
+            t = value['t'].astype(float)
+            mag = value['mag'].astype(float)
+            thalf = np.interp(min(mag)+0.75, mag, t)/(1+z)
+            Mpeak = min(mag)-Planck15.distmod(z=z).value
+            ax.scatter(thalf, Mpeak, marker='o', c='lightgrey', zorder=0)
+        except:
+            pass
 
 
 def slsne(ax):
-    # Lin
-    pass
+    """ Data points from Dan Perley """
+    dat = np.loadtxt("../data/slsne/values.txt", delimiter=',')
+    ax.scatter(dat[:,0], dat[:,1], marker='v', c='purple')
 
 
 def novae(ax):
@@ -237,8 +317,15 @@ def novae(ax):
     pass
 
 
+def ilrt(ax):
+    """ Data points from prev version of diagram """
+    dat = np.loadtxt("../data/ilrt.txt", delimiter=',')
+    ax.scatter(dat[:,0], dat[:,1], marker='v', c='red')
+
+
 def lrne(ax):
-    # Nadia
-    pass
+    """ Data points from prev version of diagram """
+    dat = np.loadtxt("../data/lrn.txt", delimiter=',')
+    ax.scatter(dat[:,0], dat[:,1], marker='v', c='red')
 
 
