@@ -15,17 +15,18 @@ from m_trise import *
 fig, ax = plt.subplots(1,1, figsize=(8,6))
 
 snia(ax)
-ax.text(6, -20.5, "Thermonuclear\nSupernovae", 
-        fontsize=14)#, bbox=dict(facecolor='white', edgecolor='grey'))
+ax.text(16, -20.6, "1000 Ia SNe", 
+        fontsize=14, horizontalalignment='center', rotation=20)
+#, bbox=dict(facecolor='white', edgecolor='grey'))
 
 core_collapse(ax)
 ax.text(
-        20, -14.2, "Core-collapse\nSupernovae",
-        fontsize=14, color='orange')#,
+        20, -17.5, "200 CC SNe",
+        fontsize=14, color='black')#,
         #bbox=dict(edgecolor='orange', facecolor='white'))
 
 slsne(ax)
-ax.text(20,-23, 'Superluminous\nSupernovae', 
+ax.text(20,-22, 'Superluminous\nSupernovae', 
         fontsize=14, color='purple')#, bbox=dict(facecolor='white',
             #edgecolor='purple'))
 
@@ -67,9 +68,9 @@ ax.text(15, -7, "Classical Novae",
 #         ax.scatter(dur, M, label=st)
     
 ax.set_xlabel("Time Above Half-Max (rest-frame days)", fontsize=16)
-ax.set_xlim(0.01,200)
+ax.set_xlim(1,200)
 ax.set_xscale('log')
-ax.set_ylim(-5, -30)
+ax.set_ylim(-4.7, -24)
 ax.set_ylabel("Peak Luminosity ($M_v$)", fontsize=16)
 
 # Axis showing luminosity in erg/s
@@ -105,5 +106,5 @@ ax.tick_params(axis='both', labelsize=14)
 
 # Display
 plt.tight_layout()
-#plt.show()
-plt.savefig("tau_mv.png", dpi=500)
+plt.show()
+#plt.savefig("tau_mv.png", dpi=500)

@@ -143,7 +143,7 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
     
     # plot individual data points
     #ax.errorbar(x, y, y_err, fmt='.k', ms=0.1) #, lw=0.1)
-    ax.scatter(x, y, marker='.', s=1, c='k', zorder=1)
+    ax.scatter(x, y, marker='.', s=1, c='k', zorder=3)
     
     # plot the grey contour
     slope, e_slope, intercept = mylinear_fit(x, y, y_err, npar=2)
@@ -155,9 +155,9 @@ def snia(ax, band = 'p48g', timescale='efoldDecline',
     fit_up = slope_up * x_fit+ intercept
     fit_dw = slope_dw * x_fit+ intercept
     ax.fill_between(
-            x_fit, fit_up, fit_dw, facecolor = 'grey', 
+            x_fit, fit_up, fit_dw, facecolor = 'lightgrey', 
             label="5-sigma interval",
-            edgecolor='k', lw=1.0, zorder=0)
+            edgecolor='k', lw=1.0, zorder=2)
            
 
 def fix_df(df):
@@ -206,31 +206,43 @@ def core_collapse(ax):
             peakmag = np.min(mag)
             thalf = np.interp(peakmag+0.75, y, x)
             absmag = peakmag-Planck15.distmod(z=z[ii]).value
-            ax.scatter(thalf, absmag, c='orange', marker='s', zorder=0)
+            ax.scatter(thalf, absmag, c='lightgrey', marker='s', zorder=0)
 
 
 def fbots(ax):
-    """ Will include an inset showing fast-rising transients """
     # Koala
     x, y = 6/1.2714, -21.2
     ax.scatter(x, y, marker='D', c='k')
-    #ax.text(x, y, "ZTF18abvkwla", fontsize=10, horizontalalignment='right')
+    ax.text(x, y*1.01, "ZTF18abvkwla", fontsize=11, 
+            horizontalalignment='center', verticalalignment='bottom')
+
+    # AT2018cow
+    x, y = 6, -20.5
+    ax.scatter(x, y, marker='D', c='k')
+    ax.text(x, y*1.01, "AT2018cow", fontsize=11, horizontalalignment='left',
+            verticalalignment='bottom')
+
+    # ZTF18abukavn
+    x, y = 10, -19.6
+    ax.scatter(x, y, marker='D', c='k')
+    ax.text(x, y/1.01, "ZTF18abukavn", fontsize=11, 
+            horizontalalignment='right', verticalalignment='top')
 
     # PS1-10bjp
     x, y = (1+7.7)/1.113, -18.2
-    ax.scatter(x, y, marker='D', c='k')
+    ax.scatter(x, y, marker='D', c='lightgrey')
 
     # PS1-11qr
     x, y = (3+8.7)/1.324, -19.3
-    ax.scatter(x, y, marker='D', c='k')
+    ax.scatter(x, y, marker='D', c='lightgrey')
 
     # PS1-11qr
     x, y = (2+5)/1.405, -19.1
-    ax.scatter(x, y, marker='D', c='k')
+    ax.scatter(x, y, marker='D', c='lightgrey')
 
     # PS1-12brf
     x, y = (9)/1.275, -18.3
-    ax.scatter(x, y, marker='D', c='k')
+    ax.scatter(x, y, marker='D', c='lightgrey')
 
 
 def gap(ax):
