@@ -302,6 +302,24 @@ def gap(ax):
                 marker='^', c='k', label=leg)
             leg = '_nolegend_'
 
+    """ Data from KDE """
+    cadata = ascii.read('../data/carich_gap.txt')
+    name = cadata['Object']
+    risetime = cadata['Rise']
+    falltime = cadata['Fall']
+    peakmag = cadata['PeakMag']
+    
+    for i in range(len(name)):
+         if risetime[i] == -99 or falltime[i] == -99:
+             continue
+         timescale = risetime[i] + falltime[i]
+
+	 if 'ZTF' in name[i]:
+              ax.scatter(timescale, peakmag[i], marker='^', c='k', label='_nolegend_')
+         else:
+              ax.scatter(timescale, peakmag[i], marker='^', c='grey', label='_nolegend_')
+
+
 
 def tde(ax):
     dat = np.loadtxt("../data/tde.txt", dtype=str)
