@@ -306,7 +306,7 @@ def gap(ax):
     cadata = ascii.read('../data/carich_gap.txt')
     name = cadata['Object']
     risetime = cadata['Rise']
-    falltime = cadata['Fall']
+    falltime = cadata['Fade']
     peakmag = cadata['PeakMag']
     
     for i in range(len(name)):
